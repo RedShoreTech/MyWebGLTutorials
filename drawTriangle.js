@@ -37,9 +37,10 @@ function initGL() {
     const POSITION_LOCATION = 0; // Binding point for position attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     const positions = [
-        0.0,  0.5,  // Top vertex
-        -0.5, -0.5, // Bottom left vertex
-        0.5,  -0.5, // Bottom right vertex
+        -0.5,  0.5,  // Top left vertex     (0)
+         0.5,  0.5,  // Top right vertex    (1)
+        -0.5, -0.5,  // Bottom left vertex  (2)
+         0.5, -0.5,  // Bottom right vertex (3)
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -48,11 +49,21 @@ function initGL() {
     const COLOR_LOCATION = 1; // Binding point for color attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     const colors = [
-        1.0, 0.0, 0.0, 1.0,    // Top vertex - Red
-        0.0, 1.0, 0.0, 1.0,    // Bottom left vertex - Green
-        0.0, 0.0, 1.0, 1.0,    // Bottom right vertex - Blue
+        1.0, 0.0, 0.0, 1.0,    // Top left - Red
+        0.0, 1.0, 0.0, 1.0,    // Top right - Green
+        0.0, 0.0, 1.0, 1.0,    // Bottom left - Blue
+        1.0, 1.0, 0.0, 1.0,    // Bottom right - Yellow
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+    // Create index buffer
+    const indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    // Define vertices order for TRIANGLE_STRIP
+    const indices = [
+        0, 1, 2, 3  // Order: Top-left -> Top-right -> Bottom-left -> Bottom-right
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
     // Create and bind VAO
     const vao = gl.createVertexArray();
@@ -68,13 +79,17 @@ function initGL() {
     gl.enableVertexAttribArray(COLOR_LOCATION);
     gl.vertexAttribPointer(COLOR_LOCATION, 4, gl.FLOAT, false, 0, 0);
 
+    // Bind index buffer to VAO
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+
     // Draw the scene
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.useProgram(shaderProgram);
     gl.bindVertexArray(vao);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    // Draw rectangle using TRIANGLE_STRIP and index buffer
+    gl.drawElements(gl.TRIANGLE_STRIP, 4, gl.UNSIGNED_SHORT, 0);
 }
 
 // Initialize shader program
