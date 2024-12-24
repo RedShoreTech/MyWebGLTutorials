@@ -84,10 +84,16 @@ function initGL() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    gl.viewport(0, 0, 640, 480);
     gl.useProgram(shaderProgram);
     gl.bindVertexArray(vao);
     // Draw rectangle using TRIANGLE_STRIP and index buffer
+    gl.viewport(0, 0, 320, 240);
+    gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
+
+    gl.viewport(320, 0, 320, 240);
+    gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
+    
+    gl.viewport(0, 240, 320, 240);
     gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
 }
 
