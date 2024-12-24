@@ -9,22 +9,22 @@ let vertexCount = 0;
 
 // Vertex shader program - GLSL 330
 const vsSource = `#version 300 es
-    layout(location = 0) in vec2 aVertexPosition;
-    layout(location = 1) in vec2 aVertexColor;
-    out vec2 color;
+    layout(location = 0) in vec4 aVertexPosition;
+    layout(location = 1) in vec4 aVertexColor;
+    out vec4 vColor;
     void main() {
-        gl_Position = vec4(aVertexPosition, 0.0, 1.0);
-        color = aVertexColor;
+        gl_Position = aVertexPosition;
+        vColor = aVertexColor;
     }
 `;
 
 // Fragment shader program - GLSL 330
 const fsSource = `#version 300 es
     precision mediump float;
-    in vec2 color;
+    in vec4 vColor;
     out vec4 fragColor;
     void main() {
-        fragColor = vec4(color, 0.0, 1.0);
+        fragColor = vColor;
     }
 `;
 
