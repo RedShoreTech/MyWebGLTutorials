@@ -34,7 +34,6 @@ function initGL() {
 
     // Create vertex position buffer
     const positionBuffer = gl.createBuffer();
-    const POSITION_LOCATION = 0; // Binding point for position attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     const positions = [
         0,  0.5,  // Top vertex     (0)
@@ -42,10 +41,8 @@ function initGL() {
          0.5, -0.5,  // Bottom right vertex (2)
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
     // Create vertex color buffer
     const colorBuffer = gl.createBuffer();
-    const COLOR_LOCATION = 1; // Binding point for color attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     const colors = [
         1.0, 0.0, 0.0, 1.0,    // Top - Red
@@ -53,7 +50,6 @@ function initGL() {
         0.0, 0.0, 1.0, 1.0,    // Bottom right - Blue 
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
     // Create index buffer
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -66,17 +62,16 @@ function initGL() {
     // Create and bind VAO
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
-
     // Set up vertex position attribute
+    const POSITION_LOCATION = 0; // Binding point for position attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.enableVertexAttribArray(POSITION_LOCATION);
     gl.vertexAttribPointer(POSITION_LOCATION, 2, gl.FLOAT, false, 0, 0);
-
     // Set up vertex color attribute
+    const COLOR_LOCATION = 1; // Binding point for color attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.enableVertexAttribArray(COLOR_LOCATION);
     gl.vertexAttribPointer(COLOR_LOCATION, 4, gl.FLOAT, false, 0, 0);
-
     // Bind index buffer to VAO
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
