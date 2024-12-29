@@ -9,8 +9,8 @@ const vsSource = `#version 300 es
 
 // Fragment shader program - updated for ES 3.0
 const fsSource = `#version 300 es
-    precision mediump float;
-    out vec4 fragColor;
+    precision highp float;
+    out mediump vec4 fragColor;
     uniform vec2 uVertexPositions[3];
     uniform vec3 uVertexColors[3];
     uniform vec2 uViewportSize;
@@ -24,22 +24,22 @@ const fsSource = `#version 300 es
         vec2 B = uVertexPositions[1];
         vec2 C = uVertexPositions[2];
         // Length of line segments:
-        vec2 PA  = A - p;
-        vec2 PB = B - p;
-        vec2 PC = C - p;
-        vec2 AB = B - A;
-        vec2 AC = C - A;
+        vec3 PA  = vec3(A - p, 1.0);
+        vec3 PB = vec3(B - p, 1.0);
+        vec3 PC = vec3(C - p, 1.0);
+        vec3 AB = vec3(B - A, 1.0);
+        vec3 AC = vec3(C - A, 1.0);
         // Areas of triangles:
-        float PAB = cross(PA, PB);
-        float PBC = cross(PB, PC);
-        float PCA = cross(PC, PA);
-        float ABC = cross(AB, AC);
+        float PAB = length(cross(PA, PB));
+        float PBC = length(cross(PB, PC));
+        float PCA = length(cross(PC, PA));
+        float ABC = length(cross(AB, AC));
         // Weights(Barycentric coordinates):
         float alpha = PBC / ABC;
         float beta = PCA / ABC;
         float gamma = PAB / ABC;
         // Weighted sum:
-        vec3 color = alpha * uVertexColors[0] + beta * uVertexColors[1] + gamma * uVertexColors[2];
+        mediump vec3 color = alpha * uVertexColors[0] + beta * uVertexColors[1] + gamma * uVertexColors[2];
         fragColor = vec4(color, 1.0);
     }
 `;
