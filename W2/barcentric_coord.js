@@ -9,26 +9,25 @@ const vsSource = `#version 300 es
 
 // Fragment shader program - updated for ES 3.0
 const fsSource = `#version 300 es
-    precision mediump float;
-    out vec4 fragColor;
+    precision highp float;
+    out mediump vec4 fragColor;
     uniform vec2 uVertexPositions[3];
     uniform vec3 uVertexColors[3];
     uniform vec2 uViewportSize;
 
     void main() {
-        // Normalized Device Coordinates of current pixel:
-        vec2 p = (gl_FragCoord.xy / uViewportSize) * 2.0 - 1.0;
-        p.y = -p.y;
         // Vertex positions in NDC:
         vec2 A = uVertexPositions[0];
         vec2 B = uVertexPositions[1];
         vec2 C = uVertexPositions[2];
+        // Normalized Device Coordinates of current pixel:
+        vec2 p = (gl_FragCoord.xy / uViewportSize) * 2.0 - 1.0;
         // Length of line segments:
-        vec3 PA  = vec3(A - p, 1.0);
-        vec3 PB = vec3(B - p, 1.0);
-        vec3 PC = vec3(C - p, 1.0);
-        vec3 AB = vec3(B - A, 1.0);
-        vec3 AC = vec3(C - A, 1.0);
+        vec3 PA  = vec3(A - p, 0.0);
+        vec3 PB = vec3(B - p, 0.0);
+        vec3 PC = vec3(C - p, 0.0);
+        vec3 AB = vec3(B - A, 0.0);
+        vec3 AC = vec3(C - A, 0.0);
         // Areas of triangles:
         float PAB = length(cross(PA, PB));
         float PBC = length(cross(PB, PC));
