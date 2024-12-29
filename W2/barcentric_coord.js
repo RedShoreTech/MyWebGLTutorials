@@ -9,8 +9,8 @@ const vsSource = `#version 300 es
 
 // Fragment shader program - updated for ES 3.0
 const fsSource = `#version 300 es
-    precision highp float;
-    out mediump vec4 fragColor;
+    precision mediump float;
+    out vec4 fragColor;
     uniform vec2 uVertexPositions[3];
     uniform vec3 uVertexColors[3];
     uniform vec2 uViewportSize;
@@ -39,7 +39,7 @@ const fsSource = `#version 300 es
         float beta = PCA / ABC;
         float gamma = PAB / ABC;
         // Weighted sum:
-        mediump vec3 color = alpha * uVertexColors[0] + beta * uVertexColors[1] + gamma * uVertexColors[2];
+        vec3 color = alpha * uVertexColors[0] + beta * uVertexColors[1] + gamma * uVertexColors[2];
         fragColor = vec4(color, 1.0);
     }
 `;
@@ -79,27 +79,27 @@ function initGL() {
     uColors = gl.getUniformLocation(shaderProgram, 'uVertexColors');
     uViewportSize = gl.getUniformLocation(shaderProgram, 'uViewportSize');
 
+    // Create and bind VAO
+    vao = gl.createVertexArray();
+    gl.bindVertexArray(vao);
+
     // Create vertex position buffer
     const vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    // Set up vertex position attribute
+    const POSITION_LOCATION = 0; // Binding point for vertex position attribute
+    gl.enableVertexAttribArray(POSITION_LOCATION);
+    gl.vertexAttribPointer(POSITION_LOCATION, 2, gl.FLOAT, false, 0, 0);
+
     // Create index buffer
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    // Define vertices order for TRIANGLE_STRIP
+    // Define vertices
     const indices = [
         0, 1, 2  // Order: Top -> Bottom-left -> Bottom-right
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-    // Create and bind VAO
-    vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
-    // Set up vertex position attribute
-    const POSITION_LOCATION = 0; // Binding point for vertex position attribute
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.enableVertexAttribArray(POSITION_LOCATION);
-    gl.vertexAttribPointer(POSITION_LOCATION, 2, gl.FLOAT, false, 0, 0);
 
     requestAnimationFrame(draw);
 }
@@ -108,12 +108,12 @@ function draw() {
     // Draw the scene
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+    gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(shaderProgram);
     // Set values of uniform arrays
     gl.uniform2fv(uPositions, positions);
     gl.uniform3fv(uColors, colors);
-    gl.uniform2f(uViewportSize, canvas.clientWidth, canvas.clientHeight);
+    gl.uniform2f(uViewportSize, canvas.width, canvas.height);
     gl.bindVertexArray(vao);
     // Draw rectangle using TRIANGLE_STRIP and index buffer
     gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
